@@ -17,7 +17,7 @@ export default class App extends React.Component {
   }
 
   componentDidMount(){
-    // setInterval(this.inc, 1000)
+    setInterval(this.inc, 1000)
   }
 
   render(){
