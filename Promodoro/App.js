@@ -1,6 +1,20 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
+
+
+class CounterEven extends React.Component{
+
+  shouldComponentUpdate(nextProps){
+    return !(nextProps.count % 2)
+  }
+  render(){
+    return (
+        <Text style={styles.count} >{this.props.count}</Text>
+    )
+    }
+}
+
 export default class App extends React.Component {
 
   constructor(props){
@@ -23,7 +37,7 @@ export default class App extends React.Component {
   render(){
     return (
       <View style={styles.appContainer}>
-        <Text style={styles.count}>{this.state.count}</Text>
+        <CounterEven count={this.state.count} />
       </View>
     )
     }
