@@ -1,57 +1,73 @@
 import React from 'react';
-import { Button, FlatList, StyleSheet, Text, View } from 'react-native';
-import Constants from 'expo-constants';
 
-import contacts, { compareNames } from './contacts'
+// import contacts, { compareNames } from './contacts'
+import { createStackNavigator, createSwitchNavigator, createBottomTabNavigator } from 'react-navigation'
+import AddContactScreen from './screens/AddContactScreen';
+import ContactsListScreen from './screens/ContactsListScreen';
+import ContactDetailsScreen from './screens/ContactDetailsScreen'
+import LoginScreen from './screens/LoginScreen'
+import SettingsScreen from './screens/SettingsScreen'
+import { Ionicons } from 'react-native-vector-icons'
+import { fetchUsers } from './api'
 
-const Contact = props => (
-  <View style={styles.contactPadding}>
-    <Text>{props.name}</Text>
-    <Text>{props.phone}</Text>
-  </View>
-)
+const ContactTab = createStackNavigator({
+  AddContact: AddContactScreen,
+  ContactsList: ContactsListScreen,
+  ContactDetails: ContactDetailsScreen
+}, {
+  initialRouteName: 'ContactsList'
+})
+
+ContactTab.navigationOptions = {
+  tabBarIcon: ({ focused, tintColor }) => (
+    <Ionicons
+      name={`ios-contacts${focused ? "" : "-outline"}`}
+      size={25}
+      color={tintColor}
+    />
+  )
+};
+
+const MainNavigator = createBottomTabNavigator({
+  Contacts: ContactTab,
+  Settings: SettingsScreen
+})
+
+const AppNavigator = createSwitchNavigator({
+  Main: MainNavigator,
+  Login: LoginScreen
+}, {
+  initialRouteName: 'Login'
+})
 
 export default class App extends React.Component {
   state = {
-    showContacts: false,
-    contacts: contacts
+    contacts: null,
   }
 
-  sort = () => {
-    this.setState(prevState => ({
-      contacts: [...prevState.contacts].sort(compareNames)
+  componentDidMount() {
+    this.getUsers()
+  }
+
+  getUsers = async () => {
+    const contacts = await fetchUsers()
+    this.setState({
+      contacts
+    })
+  }
+
+  addContact = (state) => {
+      this.setState(prevState => ({
+      contacts: [...prevState.contacts, state]
     }))
   }
 
-  toggleContacts = () => {
-    this.setState(prevState => ({showContacts: !prevState.showContacts}))
-  }
 
-  renderItem = obj => <Contact {...obj.item} />
   render() {
     return (
-      <View style={styles.viewPadding}>
-        <Button style={styles.buttonMargin} title="toggle contacts" onPress={this.toggleContacts} />
-        <Button title="sort contacts" onPress={this.sort} />
-          {
-            this.state.showContacts && (<FlatList
-              renderItem={this.renderItem}
-              data={this.state.contacts}
-            />)
-          }
-      </View>
+      <AppNavigator screenProps={{ contacts: this.state.contacts, addContact: this.addContact }} />
     );
   }
 }
 
-const styles = StyleSheet.create({
-  viewPadding: {
-    paddingTop: Constants.statusBarHeight
-  },
-  buttonMargin: {
-    marginBottom: 20,
-  },
-  contactPadding: {
-    padding: 20
-  }
-});
+
