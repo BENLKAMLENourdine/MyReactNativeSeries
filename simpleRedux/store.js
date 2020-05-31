@@ -36,6 +36,12 @@ const userReducer = (state, action) => {
             action.payload
         )
     }
+    if(action.type === UPDATE_CONTACT){
+        return merge(
+            state,
+            { previousContact: action.payload }
+        )
+    }
     return state
 }
 
