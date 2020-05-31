@@ -1,6 +1,7 @@
 import React from 'react';
+import { Provider } from 'react-redux'
+import store from './store/redux'
 
-// import contacts, { compareNames } from './contacts'
 import { createStackNavigator, createSwitchNavigator, createBottomTabNavigator } from 'react-navigation'
 import AddContactScreen from './screens/AddContactScreen';
 import ContactsListScreen from './screens/ContactsListScreen';
@@ -65,7 +66,9 @@ export default class App extends React.Component {
 
   render() {
     return (
-      <AppNavigator screenProps={{ contacts: this.state.contacts, addContact: this.addContact }} />
+      <Provider store={store}>
+        <AppNavigator screenProps={{ addContact: this.addContact }} />
+      </Provider>
     );
   }
 }

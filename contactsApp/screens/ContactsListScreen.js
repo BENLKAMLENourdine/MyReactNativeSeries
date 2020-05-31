@@ -2,8 +2,9 @@ import React from 'react'
 import { Button, StyleSheet, View } from 'react-native';
 import Constants from 'expo-constants';
 import ContactList from '../ContactList'
+import { connect } from 'react-redux'
 
-export default class ContactsListScreen extends React.Component {
+class ContactsListScreen extends React.Component {
   static navigationOptions = ({ navigation }) => {
     return {
       headerTitle: 'Contacts',
@@ -11,10 +12,11 @@ export default class ContactsListScreen extends React.Component {
     }
   }
 
+
   render() {
       return (
           <View style={styles.viewPadding}>
-              <ContactList contacts={this.props.screenProps.contacts} onSelectContact={(contact) => {
+              <ContactList contacts={this.props.contacts} onSelectContact={(contact) => {
                 this.props.navigation.navigate('ContactDetails', {
                   phone: contact.phone,
                   name: contact.name
@@ -36,3 +38,10 @@ const styles = StyleSheet.create({
       padding: 20
     }
   });
+
+  const mapStateToProps = state => ({
+    contacts: state.contacts
+  })
+
+
+  export default connect(mapStateToProps)(ContactsListScreen)

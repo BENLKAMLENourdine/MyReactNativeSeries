@@ -1,7 +1,7 @@
 const express = require('express')
 const bodyParser = require('body-parser')
 
-const PORT = process.env.PORT || 8000
+const PORT = 8888
 
 // usernames are keys and passwords are values
 const users = {

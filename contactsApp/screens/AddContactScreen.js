@@ -1,13 +1,15 @@
 import React from 'react'
+import { connect } from 'react-redux'
+import { updateContact } from '../store/actions'
 
 import AddContactForm from '../addContactForm'
 
-export default class AddContactScreen extends React.Component {
+class AddContactScreen extends React.Component {
     static navigationOptions = {
         headerTitle: 'Add Contact',
     }
     handleAddddContact = formState => {
-        this.props.screenProps.addContact(formState)
+        this.props.updateContact(formState)
         this.props.navigation.navigate('ContactsList')
     }
 
@@ -15,3 +17,6 @@ export default class AddContactScreen extends React.Component {
         return <AddContactForm  addContact={this.handleAddddContact} />
     }
 }
+
+
+  export default connect(null, {updateContact: updateContact})(AddContactScreen)
